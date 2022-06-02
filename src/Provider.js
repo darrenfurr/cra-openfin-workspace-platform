@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import * as WorkspacePlatform from "@openfin/workspace-platform";
 import { Home } from "@openfin/workspace";
 
-function Provider() {
+function Provider({ user }) {
   useEffect(() => {
     const initPlatform = async () => {
       console.log("init platform...");
