@@ -1,42 +1,40 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import * as WorkspacePlatform from "@openfin/workspace-platform";
 import { Home } from "@openfin/workspace";
+import { useLocation } from "react-router-dom";
 
 function Provider() {
+  const location = useLocation();
+  const initializing = useRef();
+
+  const initialize = useCallback(async () => {
+    const { user } = location.state;
+    if (!user || initializing.current) {
+      return;
+    }
+
+    try {
+      console.log("initializing platform...");
+      initializing.current = true;
+      await WorkspacePlatform.init({
+        browser: {},
+      });
+
+      console.log("register Home...");
+      await Home.register({
+        title: `Demo Workspace`,
+        id: "demo-workspace",
+        icon: "https://openfin.co/favicon-32x32.png",
+        onUserInput: () => null,
+        onResultDispatch: () => null,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, [location]);
+
   useEffect(() => {
-    const initPlatform = async () => {
-      console.log("init platform...");
-
-      try {
-        await WorkspacePlatform.init({
-          browser: {},
-        });
-
-        console.log("register Home...");
-        await Home.register({
-          title: `Demo Workspace`,
-          id: "demo-workspace",
-          icon: "https://openfin.co/favicon-32x32.png",
-          onUserInput: () => null,
-          onResultDispatch: () => null,
-        });
-
-        // TODO: console.log("Register with Notification Center...");
-        //   await register({
-        //     id: "demo-workspace-provider",
-        //     title: "Demo Workspace",
-        //     icon: "https://openfin.co/favicon-32x32.png",
-        //   });
-        //   console.log("Registered notifications");
-      } catch (e) {
-        console.error(e);
-      }
-
-      console.log("show Home...");
-      await Home.show();
-    };
-
-    initPlatform();
+    initialize();
   }, []);
 
   return (

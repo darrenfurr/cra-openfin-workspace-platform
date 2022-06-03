@@ -8,7 +8,15 @@ function Home() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>A check for authentication would go here...</p>
-        <Link className="App-link" to="/provider">
+        <Link
+          className="App-link"
+          to={{
+            pathname: "/provider",
+            state: {
+              user: true,
+            },
+          }}
+        >
           Initialize OpenFin Workspace
         </Link>
       </header>
