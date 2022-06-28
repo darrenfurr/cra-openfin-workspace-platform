@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@openfin/workspace": "^6.3.6",
-    "@openfin/workspace-platform": "^6.3.6",
+    "@openfin/workspace": "^8.1.7",
+    "@openfin/workspace-platform": "^8.1.7",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",

@@ -1,40 +1,21 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import * as WorkspacePlatform from "@openfin/workspace-platform";
-import { Home } from "@openfin/workspace";
-import { useLocation } from "react-router-dom";
-
 function Provider() {
-  const location = useLocation();
-  const initializing = useRef();
-
-  const initialize = useCallback(async () => {
-    const { user } = location.state;
-    if (!user || initializing.current) {
-      return;
-    }
-
-    try {
-      console.log("initializing platform...");
-      initializing.current = true;
-      await WorkspacePlatform.init({
-        browser: {},
-      });
-
-      console.log("register Home...");
-      await Home.register({
-        title: `Demo Workspace`,
-        id: "demo-workspace",
-        icon: "https://openfin.co/favicon-32x32.png",
-        onUserInput: () => null,
-        onResultDispatch: () => null,
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  }, [location]);
-
   useEffect(() => {
-    initialize();
+    WorkspacePlatform.init({
+      browser: {},
+    }).then(() => {
+      return window.fin.Platform.getCurrentSync().createWindow({
+        name: "workspace-provider-window",
+        defaultCentered: true,
+        autoShow: true,
+        resizable: true,
+        saveWindowState: false,
+        frame: false,
+        alwaysOnTop: true,
+        url: "http://localhost:3000",
+      });
+    });
   }, []);
 
   return (
